@@ -1,4 +1,3 @@
-```
 /*
  * Copyright © 2014 .. Mariusz Szwoch
  *   based on
@@ -260,7 +259,7 @@ void TesselationModesApp::DecreaseTesselationLevel(GLfloat& level)
 void TesselationModesApp::UpdateTitle(void)
 {
 	char title[128]; // content of the application's title bar
-	sprintf(title, "Tessellation Modes by Damian Cichosz [%s]", tess_shaders_names[program_index]);
+	sprintf(title, "Tessellation Modes by Anonim [%s]", tess_shaders_names[program_index]);
 	memcpy(info.title, title, sizeof(title));
 	glfwSetWindowTitle(info.title);
 }
@@ -270,61 +269,9 @@ DECLARE_MAIN(TesselationModesApp)
 
 
 
-QUADS.TES
 
-#version 420 core
-layout (quads) in;
- 
-void main( void )
-{
-    vec4 p1, p2;
-    // 29. Set up vertex coordinates using any vector ...
-    //gl_Position.x = gl_TessCoord.x;
-    //gl_Position.y = gl_TessCoord.y;
-    //gl_Position.z = gl_TessCoord.z;
-    //gl_Position = (gl_TessCoord.x * gl_in[0].gl_Position + gl_TessCoord.y * gl_in[1].gl_Position + gl_TessCoord.z * gl_in[2].gl_Position); 
-    // 31-33. Set up tesselated vertex coordinates basing one control patches and tesselation ...
-    p1 = mix(gl_in[0].gl_Position, gl_in[1].gl_Position, gl_TessCoord.x);
-    p2 = mix(gl_in[2].gl_Position, gl_in[3].gl_Position, gl_TessCoord.x);
-    gl_Position = mix(p1, p2, gl_TessCoord.y);
- 
- 
-}
+TESS DEMO QUAD FS
 
-QUAD.tcs
-
-#version 420 core
-layout (vertices = 4) out;
- 
-// 50. Declare uniform parameters for tesselation levels ...
- 
- 
- 
-void main( void )
-{
-    // 27. For the first invocation (0th) set inner [0..1] & outer [0..3] tesselation levels ...
-    if (gl_InvocationID == 0) {
-      Q  gl_TessLevelInner[0] = 2.0f;
-        gl_TessLevelInner[1] = 2.0f;
-        gl_TessLevelOuter[0] = 3.0f;
-        gl_TessLevelOuter[1] = 3.0f;
-        gl_TessLevelOuter[2] = 3.0f;
-        gl_TessLevelOuter[3] = 3.0f;
-    }
- 
- 
- 
- 
-    // 28. Set patch's out position based on in position ...
-    gl_out[gl_InvocationID].gl_Position = gl_in[gl_InvocationID].gl_Position;
- 
- 
-}   
-
-
-
-
-TessDemo.fs
 
 // simple.fs
 // Just use white color for all pot-background primitives
@@ -340,9 +287,8 @@ void main( void )
 
 
 
+TESS DEMO QUAD VS
 
-
-TessDemo.vs
 
 // Tesselation.vs
 // Supporting input patch for rendering pipeline
@@ -364,11 +310,65 @@ void main( void )
     gl_Position = vertices[gl_VertexID];
  
 }
+
+
+
+
+
+QUAS TCS
+
+
+
+#version 420 core
+layout (vertices = 4) out;
  
+// 50. Declare uniform parameters for tesselation levels ...
+ 
+ 
+ 
+void main( void )
+{
+    // 27. For the first invocation (0th) set inner [0..1] & outer [0..3] tesselation levels ...
+    if (gl_InvocationID == 0) {
+        gl_TessLevelInner[0] = 2.0f;
+        gl_TessLevelInner[1] = 2.0f;
+        gl_TessLevelOuter[0] = 3.0f;
+        gl_TessLevelOuter[1] = 3.0f;
+        gl_TessLevelOuter[2] = 3.0f;
+        gl_TessLevelOuter[3] = 3.0f;
+    }
+ 
+ 
+ 
+ 
+    // 28. Set patch's out position based on in position ...
+    gl_out[gl_InvocationID].gl_Position = gl_in[gl_InvocationID].gl_Position;
+ 
+ 
+}   
 
 
 
+QUADS TES 
+
+#version 420 core
+layout (quads) in;
+ 
+void main( void )
+{
+    vec4 p1, p2;
+    // 29. Set up vertex coordinates using any vector ...
+    //gl_Position.x = gl_TessCoord.x;
+    //gl_Position.y = gl_TessCoord.y;
+    //gl_Position.z = gl_TessCoord.z;
+    //gl_Position = (gl_TessCoord.x * gl_in[0].gl_Position + gl_TessCoord.y * gl_in[1].gl_Position + gl_TessCoord.z * gl_in[2].gl_Position); 
+    // 31-33. Set up tesselated vertex coordinates basing one control patches and tesselation ...
+    p1 = mix(gl_in[0].gl_Position, gl_in[1].gl_Position, gl_TessCoord.x);
+    p2 = mix(gl_in[2].gl_Position, gl_in[3].gl_Position, gl_TessCoord.x);
+    gl_Position = mix(p1, p2, gl_TessCoord.y);
+ 
+ 
+}
 
 
 
-```
